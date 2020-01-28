@@ -1,0 +1,17 @@
+name: 'Update project'
+description: 'Update project cards based on issue actions'
+inputs:
+  project:  # id of input
+    description: 'Project board'
+    required: true
+    default: "Issues"
+  rules: # label rules
+    description: 'Label to column mappings on a first match basis'
+    required: true
+    default: '[{"label": "in_progress", "column": "In progress" }, { "label": "lgtm", "column": "Review in progress", "remove": ["in_progress"] }]'
+outputs:
+  message: # id of output
+    description: 'Output message'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

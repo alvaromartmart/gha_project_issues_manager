@@ -1,0 +1,23 @@
+# name: Add a new GitHub Project card linked to a GitHub issue to the specified project column
+on: [issues]
+
+jobs:
+  issue_manager_job:
+    runs-on: ubuntu-latest
+    name: Issue manager
+    steps:
+    - name: Issue evaluation step
+      id: hello
+      uses: alvaromartmart/gha_project_issues_manager@master
+      if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'labeled')
+      with:
+        project: Issues
+        rules: '[
+          { "label": "in_progress", "column": "In progress" },
+          { "label": "lgtm", "column": "Review in progress", "remove": ["in_progress"] }]
+        '
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    # Usa los resultados del paso anterior
+    - name: Log results
+      run: echo "${{ steps.hello.outputs.message }}"

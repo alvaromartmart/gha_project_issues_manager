@@ -1,0 +1,37 @@
+{
+  "name": "gha_project_issues_manager",
+  "version": "1.0.0",
+  "description": "Github action that manages project cards based on issue labels",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alvaromartmart/gha_project_issues_manager.git"
+  },
+  "keywords": [
+    "github",
+    "actions",
+    "workflow"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alvaromartmart/gha_project_issues_manager/issues"
+  },
+  "homepage": "https://github.com/alvaromartmart/gha_project_issues_manager#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.2",
+    "@actions/github": "^2.1.0",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "husky": "^4.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsc; ncc build lib/index.js; git add dist/index.js;"
+    }
+  }
+}

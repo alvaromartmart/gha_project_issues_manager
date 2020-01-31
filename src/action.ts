@@ -47,9 +47,7 @@ async function getProject() {
 }
 
 function getColumnByName(columns: { name: string; id: number; url: string }[], name: string) {
-  // console.log(`Getting column by name "${name}"`);
   const column = columns.find(col => col.name === name);
-  // console.log(`${column?.name} (${column?.id}) - ${column?.url}`);
   return column;
 }
 
@@ -96,7 +94,8 @@ export async function run() {
       const issue = await getIssue();
       switch (action) {
         case 'opened':
-          const todoColumn = getColumnByName(columns, 'To do');
+          const initialColumnName = core.getInput('initialColumn');
+          const todoColumn = getColumnByName(columns, initialColumnName);
           if (todoColumn) {
             await createIssueCard(issue.id, todoColumn.id);
           }

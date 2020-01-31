@@ -5,6 +5,10 @@ inputs:
     description: 'Project board'
     required: true
     default: "Issues"
+  initialColumn:
+    description: 'Initial column for new issues'
+    required: false
+    default: "To do"
   rules: # label rules
     description: 'Label to column mappings on a first match basis'
     required: true

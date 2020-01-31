@@ -11,7 +11,8 @@ jobs:
       uses: alvaromartmart/gha_project_issues_manager@master
       if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'labeled')
       with:
-        project: Issues
+        project: "Issues"
+        initialColumn: "To do"
         rules: '[
           { "label": "in_progress", "column": "In progress" },
           { "label": "lgtm", "column": "Review in progress", "remove": ["in_progress"] }]

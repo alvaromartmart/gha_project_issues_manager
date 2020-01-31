@@ -5,15 +5,15 @@ const TOKEN = core.getInput('token') || (process.env.GITHUB_TOKEN as string);
 const PROJECT_NAME = core.getInput('project') || process.env.PROJECT_NAME;
 const gh = new github.GitHub(TOKEN);
 
-const labelRules: { label: string; column: string; remove?: string[] }[] = JSON.parse(core.getInput('rules'));
+const labelRules = getLabelRules();
 
-async function listProjects() {
-  console.log(`Listing projects...`);
-  const projects = await gh.projects.listForRepo({
-    repo: github.context.repo.repo,
-    owner: github.context.repo.owner
-  });
-  return projects.data;
+function getLabelRules(): { label: string; column: string; remove?: string[] }[] {
+  try {
+    return JSON.parse(core.getInput('rules'));
+  } catch (err) {
+    core.setFailed(`Label rules could not be parsed: ${err.message}`);
+    throw(err);
+  }
 }
 
 async function listColumns(columns_url: string, project_id: number) {
@@ -103,7 +103,8 @@ export async function run() {
           core.setOutput('message', `New issue card added to ${todoColumn?.name}`)
           break;
         case 'labeled':
-          const columnMapping = labelRules.find(m => m.label === github.context.payload.label.name);
+          const addedLabel: string = github.context.payload.label.name;
+          const columnMapping = labelRules.find(m => m.label.toLowerCase() === addedLabel.toLowerCase());
           if (columnMapping) {
             const column = getColumnByName(columns, columnMapping.column);
             if (column) {

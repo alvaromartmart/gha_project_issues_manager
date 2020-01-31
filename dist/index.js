@@ -222,24 +222,15 @@ var github = __importStar(__webpack_require__(458));
 var TOKEN = core.getInput('token') || process.env.GITHUB_TOKEN;
 var PROJECT_NAME = core.getInput('project') || process.env.PROJECT_NAME;
 var gh = new github.GitHub(TOKEN);
-var labelRules = JSON.parse(core.getInput('rules'));
-function listProjects() {
-    return __awaiter(this, void 0, void 0, function () {
-        var projects;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    console.log("Listing projects...");
-                    return [4 /*yield*/, gh.projects.listForRepo({
-                            repo: github.context.repo.repo,
-                            owner: github.context.repo.owner
-                        })];
-                case 1:
-                    projects = _a.sent();
-                    return [2 /*return*/, projects.data];
-            }
-        });
-    });
+var labelRules = getLabelRules();
+function getLabelRules() {
+    try {
+        return JSON.parse(core.getInput('rules'));
+    }
+    catch (err) {
+        core.setFailed("Label rules could not be parsed: " + err.message);
+        throw (err);
+    }
 }
 function listColumns(columns_url, project_id) {
     return __awaiter(this, void 0, void 0, function () {
@@ -289,9 +280,7 @@ function getProject() {
     });
 }
 function getColumnByName(columns, name) {
-    // console.log(`Getting column by name "${name}"`);
     var column = columns.find(function (col) { return col.name === name; });
-    // console.log(`${column?.name} (${column?.id}) - ${column?.url}`);
     return column;
 }
 function createIssueCard(issue_id, column_id) {
@@ -345,7 +334,7 @@ function moveIssueCard(issue_url, column_id) {
 function run() {
     var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function () {
-        var action, project, columns, issue, _d, todoColumn, columnMapping_1, column, labels, error_1;
+        var action, project, columns, issue, _d, initialColumnName, todoColumn, addedLabel_1, columnMapping_1, column, labels, error_1;
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
@@ -370,7 +359,8 @@ function run() {
                     }
                     return [3 /*break*/, 15];
                 case 4:
-                    todoColumn = getColumnByName(columns, 'To do');
+                    initialColumnName = core.getInput('initialColumn');
+                    todoColumn = getColumnByName(columns, initialColumnName);
                     if (!todoColumn) return [3 /*break*/, 6];
                     return [4 /*yield*/, createIssueCard(issue.id, todoColumn.id)];
                 case 5:
@@ -380,7 +370,8 @@ function run() {
                     core.setOutput('message', "New issue card added to " + ((_a = todoColumn) === null || _a === void 0 ? void 0 : _a.name));
                     return [3 /*break*/, 15];
                 case 7:
-                    columnMapping_1 = labelRules.find(function (m) { return m.label === github.context.payload.label.name; });
+                    addedLabel_1 = github.context.payload.label.name;
+                    columnMapping_1 = labelRules.find(function (m) { return m.label.toLowerCase() === addedLabel_1.toLowerCase(); });
                     if (!columnMapping_1) return [3 /*break*/, 13];
                     column = getColumnByName(columns, columnMapping_1.column);
                     if (!column) return [3 /*break*/, 9];

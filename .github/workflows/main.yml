@@ -14,8 +14,11 @@ jobs:
         project: "Issues"
         initialColumn: "To do"
         rules: '[
+          { "label": "low_priority", "column": "Backlog" },
           { "label": "in_progress", "column": "In progress" },
-          { "label": "lgtm", "column": "Review in progress", "remove": ["in_progress"] }]
+          { "label": "review_pending", "column": "Review in progress", "remove": ["in_progress", "review_rejected"] },
+          { "label": "review_rejected", "column": "To do", "remove": ["review_pending"] },
+          { "label": "review_approved", "column": "Done", "remove": ["review_pending", "review_rejected"] }]
         '
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

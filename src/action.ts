@@ -108,6 +108,7 @@ export async function run() {
             const column = getColumnByName(columns, columnMapping.column);
             if (column) {
               await moveIssueCard(issue.url, column.id);
+              core.setOutput('message', `Issue moved to ${column?.name}`)
             }
             if (columnMapping.remove !== undefined) {
               console.log(`Removing labels [${columnMapping.remove.join(', ')}]`);
@@ -118,10 +119,9 @@ export async function run() {
               });
               core.setOutput('message', `Issue moved to ${column?.name}, with labels ${labels.join(', ')}`)
             }else{
-              core.setOutput('message', `Issue moved to ${column?.name}`)
             }
           } else {
-            core.setFailed(`No matching column found for ${github.context.payload.label}`);
+            core.setOutput('message', `(!) No matching column found for ${github.context.payload.label}`);
           }
           break;
       }

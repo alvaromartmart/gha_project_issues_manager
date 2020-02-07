@@ -338,9 +338,9 @@ function run() {
         return __generator(this, function (_e) {
             switch (_e.label) {
                 case 0:
-                    _e.trys.push([0, 18, , 19]);
+                    _e.trys.push([0, 17, , 18]);
                     action = github.context.payload.action;
-                    if (!(action && ['opened', 'labeled', 'unlabeled'].includes(action))) return [3 /*break*/, 16];
+                    if (!(action && ['opened', 'labeled', 'unlabeled'].includes(action))) return [3 /*break*/, 15];
                     return [4 /*yield*/, getProject()];
                 case 1:
                     project = _e.sent();
@@ -357,7 +357,7 @@ function run() {
                         case 'opened': return [3 /*break*/, 4];
                         case 'labeled': return [3 /*break*/, 7];
                     }
-                    return [3 /*break*/, 15];
+                    return [3 /*break*/, 14];
                 case 4:
                     initialColumnName = core.getInput('initialColumn');
                     todoColumn = getColumnByName(columns, initialColumnName);
@@ -368,16 +368,17 @@ function run() {
                     _e.label = 6;
                 case 6:
                     core.setOutput('message', "New issue card added to " + ((_a = todoColumn) === null || _a === void 0 ? void 0 : _a.name));
-                    return [3 /*break*/, 15];
+                    return [3 /*break*/, 14];
                 case 7:
                     addedLabel_1 = github.context.payload.label.name;
                     columnMapping_1 = labelRules.find(function (m) { return m.label.toLowerCase() === addedLabel_1.toLowerCase(); });
-                    if (!columnMapping_1) return [3 /*break*/, 13];
+                    if (!columnMapping_1) return [3 /*break*/, 12];
                     column = getColumnByName(columns, columnMapping_1.column);
                     if (!column) return [3 /*break*/, 9];
                     return [4 /*yield*/, moveIssueCard(issue.url, column.id)];
                 case 8:
                     _e.sent();
+                    core.setOutput('message', "Issue moved to " + ((_b = column) === null || _b === void 0 ? void 0 : _b.name));
                     _e.label = 9;
                 case 9:
                     if (!(columnMapping_1.remove !== undefined)) return [3 /*break*/, 11];
@@ -386,26 +387,23 @@ function run() {
                     return [4 /*yield*/, gh.issues.replaceLabels(__assign(__assign({}, github.context.issue), { labels: labels }))];
                 case 10:
                     _e.sent();
-                    core.setOutput('message', "Issue moved to " + ((_b = column) === null || _b === void 0 ? void 0 : _b.name) + ", with labels " + labels.join(', '));
-                    return [3 /*break*/, 12];
-                case 11:
-                    core.setOutput('message', "Issue moved to " + ((_c = column) === null || _c === void 0 ? void 0 : _c.name));
-                    _e.label = 12;
-                case 12: return [3 /*break*/, 14];
-                case 13:
-                    core.setFailed("No matching column found for " + github.context.payload.label);
-                    _e.label = 14;
-                case 14: return [3 /*break*/, 15];
-                case 15: return [3 /*break*/, 17];
-                case 16:
+                    core.setOutput('message', "Issue moved to " + ((_c = column) === null || _c === void 0 ? void 0 : _c.name) + ", with labels " + labels.join(', '));
+                    return [3 /*break*/, 11];
+                case 11: return [3 /*break*/, 13];
+                case 12:
+                    core.setOutput('message', "(!) No matching column found for " + github.context.payload.label);
+                    _e.label = 13;
+                case 13: return [3 /*break*/, 14];
+                case 14: return [3 /*break*/, 16];
+                case 15:
                     console.log("Irrelevant action: " + action);
                     return [2 /*return*/];
-                case 17: return [3 /*break*/, 19];
-                case 18:
+                case 16: return [3 /*break*/, 18];
+                case 17:
                     error_1 = _e.sent();
                     core.setFailed(error_1.message);
-                    return [3 /*break*/, 19];
-                case 19: return [2 /*return*/];
+                    return [3 /*break*/, 18];
+                case 18: return [2 /*return*/];
             }
         });
     });

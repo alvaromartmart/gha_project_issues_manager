@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/alvaromartmart/gha_project_issues_manager#readme",
   "dependencies": {
-    "@actions/core": "^1.2.2",
+    "@actions/core": "^1.2.6",
     "@actions/github": "^2.1.0",
     "dotenv": "^8.2.0"
   },
